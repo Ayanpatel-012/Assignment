@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RecordSalesViewModel(private val repository: MilkSaleRepository): ViewModel() {
+class RecordSalesViewModel(private val repository: MilkSaleRepository) : ViewModel() {
     val quantity = MutableLiveData<String>()
     val price = MutableLiveData<String>()
     private val selectedDate = MutableLiveData<Date>()
@@ -33,10 +33,7 @@ class RecordSalesViewModel(private val repository: MilkSaleRepository): ViewMode
 
     private val _selectedDateFormatted = MutableLiveData<String>()
     val selectedDateFormatted: LiveData<String>
-    get() = _selectedDateFormatted
-
-
-
+        get() = _selectedDateFormatted
 
 
     fun onDateChanged(year: Int, monthOfYear: Int, dayOfMonth: Int) {
@@ -44,7 +41,7 @@ class RecordSalesViewModel(private val repository: MilkSaleRepository): ViewMode
             set(year, monthOfYear, dayOfMonth)
         }
         selectedDate.value = calendar.time
-        _dateError.value=null
+        _dateError.value = null
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         _selectedDateFormatted.value = dateFormat.format(selectedDate.value)
 
@@ -52,7 +49,7 @@ class RecordSalesViewModel(private val repository: MilkSaleRepository): ViewMode
     }
 
     fun saveSale() {
-        if(!validateFields()) return
+        if (!validateFields()) return
         val saleQuantity = quantity.value!!.toDouble()
         val salePrice = price.value!!.toDouble()
 
@@ -69,7 +66,7 @@ class RecordSalesViewModel(private val repository: MilkSaleRepository): ViewMode
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 repository.insertMilkSale(sale).runCatching {
-                _message.postValue("saved")
+                    _message.postValue("saved")
                 }
 
             } catch (e: Exception) {
@@ -87,22 +84,24 @@ class RecordSalesViewModel(private val repository: MilkSaleRepository): ViewMode
             _priceError.value = "Please enter a price."
             return false
         }
-        if(_selectedDateFormatted.value.isNullOrEmpty()){
-            _dateError.value="Please enter a Date."
+        if (_selectedDateFormatted.value.isNullOrEmpty()) {
+            _dateError.value = "Please enter a Date."
             return false
         }
         clearErrors()
         return true
     }
 
-    fun clearErrors(){
-        _priceError.value=null
-        _dateError.value=null
-        _quantityError.value=null
+    fun clearErrors() {
+        _priceError.value = null
+        _dateError.value = null
+        _quantityError.value = null
     }
 
-    }
-class RecordSalesViewModelFactory(private val repository: MilkSaleRepository) : ViewModelProvider.Factory {
+}
+
+class RecordSalesViewModelFactory(private val repository: MilkSaleRepository) :
+    ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RecordSalesViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

@@ -17,11 +17,11 @@ import com.animall.viewmodels.ViewSalesViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ViewSalesActivity : AppCompatActivity(),DatePickerListener {
+class ViewSalesActivity : AppCompatActivity(), DatePickerListener {
     private lateinit var binding: ActivityViewSalesBinding
     private lateinit var viewModel: ViewSalesViewModel
     private val milkSalesList: MutableList<MilkSale> = mutableListOf()
-    private lateinit var adapter:MilkSaleAdapter
+    private lateinit var adapter: MilkSaleAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,17 +36,16 @@ class ViewSalesActivity : AppCompatActivity(),DatePickerListener {
     private fun setupRecyclerView() {
         adapter = MilkSaleAdapter(milkSalesList)
         binding.recyclerView.let {
-            it.adapter=adapter
-            it.layoutManager= LinearLayoutManager(this)
+            it.adapter = adapter
+            it.layoutManager = LinearLayoutManager(this)
         }
     }
 
     private fun setupObservers() {
-        viewModel.message.observe(this){message->
-            if(!message.isNullOrEmpty()) Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
+        viewModel.message.observe(this) { message ->
+            if (!message.isNullOrEmpty()) Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
-        viewModel.milkSaleList.observe(this){
-                milkSales ->
+        viewModel.milkSaleList.observe(this) { milkSales ->
             milkSalesList.clear()
             milkSalesList.addAll(milkSales)
             adapter.notifyDataSetChanged()
@@ -66,9 +65,9 @@ class ViewSalesActivity : AppCompatActivity(),DatePickerListener {
             viewModel.validatedDatesAndGetData()
         }
         binding.clearBtn.setOnClickListener {
-            binding.startDateTxt.text=null
+            binding.startDateTxt.text = null
             binding.startDateTxt.clearFocus()
-            binding.endDateTxt.text=null
+            binding.endDateTxt.text = null
             binding.endDateTxt.clearFocus()
             viewModel.clearAllData()
         }
@@ -77,7 +76,10 @@ class ViewSalesActivity : AppCompatActivity(),DatePickerListener {
     private fun setupViewModel() {
         val database by lazy { MilkSaleDatabase.getDatabase(this) }
         val repository by lazy { MilkSaleRepository(database.milkSaleDao()) }
-        viewModel = ViewModelProvider(this, ViewSalesViewModelFactory(repository)).get(ViewSalesViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            ViewSalesViewModelFactory(repository)
+        ).get(ViewSalesViewModel::class.java)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -96,7 +98,7 @@ class ViewSalesActivity : AppCompatActivity(),DatePickerListener {
         }
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         editText.setText(dateFormat.format(calendar.time))
-        viewModel.onDateChanged(year,month,dayOfMonth,isStartDate)
+        viewModel.onDateChanged(year, month, dayOfMonth, isStartDate)
 
     }
 }

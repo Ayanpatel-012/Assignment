@@ -9,11 +9,11 @@ import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class ViewSalesViewModel(private val repository: MilkSaleRepository): ViewModel() {
+class ViewSalesViewModel(private val repository: MilkSaleRepository) : ViewModel() {
 
 
-   private var startSelectedDate :Date?=null
-    private var endSelectedDate :Date?=null
+    private var startSelectedDate: Date? = null
+    private var endSelectedDate: Date? = null
 
     private val _totalSales = MutableLiveData<Double>(0.0)
     val totalSales: LiveData<Double>
@@ -31,7 +31,7 @@ class ViewSalesViewModel(private val repository: MilkSaleRepository): ViewModel(
     val milkSaleList: LiveData<List<MilkSale>> = _milkSaleList
 
 
-     fun validatedDatesAndGetData():Boolean{
+    fun validatedDatesAndGetData(): Boolean {
         if (startSelectedDate == null || endSelectedDate == null) {
             _message.value = "Please select both start and end dates"
             return false
@@ -40,29 +40,28 @@ class ViewSalesViewModel(private val repository: MilkSaleRepository): ViewModel(
             _message.value = "Start date cannot be after end date"
             return false
         }
-        getSalesBetweenDates(startSelectedDate!!.time,endSelectedDate!!.time)
+        getSalesBetweenDates(startSelectedDate!!.time, endSelectedDate!!.time)
 
 
-         return true
+        return true
     }
 
 
+    fun onDateChanged(year: Int, monthOfYear: Int, dayOfMonth: Int, startTime: Boolean) {
 
-    fun onDateChanged(year: Int, monthOfYear: Int, dayOfMonth: Int,startTime:Boolean) {
-
-        if(startTime)  {
+        if (startTime) {
             val calendar = Calendar.getInstance().apply {
-                set(year, monthOfYear, dayOfMonth)
+                set(year, monthOfYear, dayOfMonth - 1)
             }
             startSelectedDate = calendar.time
-        }
-        else  {
+        } else {
             val calendar = Calendar.getInstance().apply {
                 set(year, monthOfYear, dayOfMonth)
             }
-            endSelectedDate=calendar.time
+            endSelectedDate = calendar.time
         }
     }
+
     private fun getSalesBetweenDates(startDate: Long, endDate: Long) {
         viewModelScope.launch {
             try {
@@ -74,31 +73,34 @@ class ViewSalesViewModel(private val repository: MilkSaleRepository): ViewModel(
             }
         }
     }
-    fun calculateSalesAndRevenue(sales:List<MilkSale>) {
+
+    fun calculateSalesAndRevenue(sales: List<MilkSale>) {
         val totalSales = sales.sumOf { it.quantity }
         val totalRevenue = sales.sumOf { it.totalAmount }
         _totalSales.value = totalSales
         _totalRevenue.value = totalRevenue
-        if(sales.isEmpty()){
+        if (sales.isEmpty()) {
             _message.postValue("there seems to be no data between the given dates")
-            _milkSaleList.value= mutableListOf()
-        }
-        else{
+            _milkSaleList.value = mutableListOf()
+        } else {
             _message.postValue("data fetched successfully")
-            _milkSaleList.value=sales
+            _milkSaleList.value = sales
         }
 
-            }
-    fun clearAllData(){
-        startSelectedDate=null;
-        endSelectedDate=null;
-        _message.value=""
-        _totalSales.value=0.0
-        _totalRevenue.value=0.0
-        _milkSaleList.value=  mutableListOf()
+    }
+
+    fun clearAllData() {
+        startSelectedDate = null;
+        endSelectedDate = null;
+        _message.value = ""
+        _totalSales.value = 0.0
+        _totalRevenue.value = 0.0
+        _milkSaleList.value = mutableListOf()
     }
 }
-class ViewSalesViewModelFactory(private val repository: MilkSaleRepository) : ViewModelProvider.Factory {
+
+class ViewSalesViewModelFactory(private val repository: MilkSaleRepository) :
+    ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ViewSalesViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

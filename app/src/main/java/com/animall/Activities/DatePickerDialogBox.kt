@@ -27,6 +27,13 @@ class DatePickerDialogBox(private val context: Context) {
         datePickerDialog.show()
     }
 }
+
 interface DatePickerListener {
-    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int, editText: EditText, isStartDate: Boolean)
+    fun onDateSelected(
+        year: Int,
+        month: Int,
+        dayOfMonth: Int,
+        editText: EditText,
+        isStartDate: Boolean
+    )
 }

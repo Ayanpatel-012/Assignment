@@ -20,6 +20,7 @@ class MilkSaleRepository(private val milkSaleDao: MilkSaleDao) {
             throw e
         }
     }
+
     suspend fun getSalesBetweenDates(startDate: Long, endDate: Long): List<MilkSale> {
         try {
             val milkSaleEntities = milkSaleDao.getSalesBetweenDates(startDate, endDate)

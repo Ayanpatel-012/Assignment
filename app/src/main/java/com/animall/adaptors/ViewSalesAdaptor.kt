@@ -12,7 +12,9 @@ import java.util.*
 
 class ViewSalesAdaptor {
 }
-class MilkSaleAdapter(private val milkSales: List<MilkSale>) : RecyclerView.Adapter<MilkSaleAdapter.ViewHolder>() {
+
+class MilkSaleAdapter(private val milkSales: List<MilkSale>) :
+    RecyclerView.Adapter<MilkSaleAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val dateTextView: TextView = itemView.findViewById(R.id.dtadpt)
@@ -22,7 +24,8 @@ class MilkSaleAdapter(private val milkSales: List<MilkSale>) : RecyclerView.Adap
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_milksale, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_milksale, parent, false)
         return ViewHolder(itemView)
     }
 
@@ -30,12 +33,13 @@ class MilkSaleAdapter(private val milkSales: List<MilkSale>) : RecyclerView.Adap
         val milkSale = milkSales[position]
         holder.dateTextView.text = formatDate(milkSale.date)
         holder.quantityTextView.text = milkSale.quantity.toString()
-        holder.priceTextView.text=milkSale.pricePerUnit.toString()
+        holder.priceTextView.text = milkSale.pricePerUnit.toString()
     }
 
     override fun getItemCount(): Int {
         return milkSales.size
     }
+
     fun formatDate(timestamp: Long): String {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val date = Date(timestamp)

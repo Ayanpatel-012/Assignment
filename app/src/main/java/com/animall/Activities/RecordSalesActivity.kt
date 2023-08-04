@@ -13,12 +13,12 @@ import com.animall.repositories.MilkSaleRepository
 import com.animall.viewmodels.RecordSalesViewModel
 import com.animall.viewmodels.RecordSalesViewModelFactory
 
-class RecordSalesActivity : AppCompatActivity() ,DatePickerListener{
+class RecordSalesActivity : AppCompatActivity(), DatePickerListener {
     private lateinit var binding: ActivityRecordSalesBinding
     private lateinit var viewModel: RecordSalesViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding=ActivityRecordSalesBinding.inflate(layoutInflater)
+        binding = ActivityRecordSalesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupViewModel()
         setListeners()
@@ -39,6 +39,7 @@ class RecordSalesActivity : AppCompatActivity() ,DatePickerListener{
             }
         }
     }
+
     private fun setListeners() {
         binding.DateTxt.setOnClickListener {
             hideKeyboard()
@@ -54,15 +55,22 @@ class RecordSalesActivity : AppCompatActivity() ,DatePickerListener{
     private fun setupViewModel() {
         val database by lazy { MilkSaleDatabase.getDatabase(this) }
         val repository by lazy { MilkSaleRepository(database.milkSaleDao()) }
-        viewModel = ViewModelProvider(this, RecordSalesViewModelFactory(repository)).get(RecordSalesViewModel::class.java)
+        viewModel = ViewModelProvider(this, RecordSalesViewModelFactory(repository)).get(
+            RecordSalesViewModel::class.java
+        )
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
+
     fun hideKeyboard() {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val currentFocusedView = currentFocus
         currentFocusedView?.let {
-            inputMethodManager.hideSoftInputFromWindow(it.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            inputMethodManager.hideSoftInputFromWindow(
+                it.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
         }
     }
 
@@ -73,6 +81,6 @@ class RecordSalesActivity : AppCompatActivity() ,DatePickerListener{
         editText: EditText,
         isStartDate: Boolean
     ) {
-        viewModel.onDateChanged(year,month,dayOfMonth)
+        viewModel.onDateChanged(year, month, dayOfMonth)
     }
 }
