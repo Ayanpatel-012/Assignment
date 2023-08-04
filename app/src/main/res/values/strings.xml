@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MilkCash</string>
+   <string name="disclaimer">Please enter quantity , price and date for saving record.</string>
+</resources>
